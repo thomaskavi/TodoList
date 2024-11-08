@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.todolist.todolist.model.Todo;
 import com.todolist.todolist.service.TodoService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/todolist")
-@Validated
 public class TodoController {
 
   @Autowired
@@ -34,20 +34,16 @@ public class TodoController {
 
   // Endpoint para criar uma nova tarefa
   @PostMapping
-  public ResponseEntity<Todo> criarTodo(@Validated @RequestBody Todo todo) {
+  public ResponseEntity<Todo> criarTodo(@Valid @RequestBody Todo todo) {
     Todo novaTodo = todoService.salvarTodo(todo);
     return ResponseEntity.ok(novaTodo);
   }
 
   // Endpoint para atualizar uma tarefa existente
   @PutMapping("/{id}")
-  public ResponseEntity<Todo> atualizarTodo(@PathVariable Long id, @Validated @RequestBody Todo novaTodo) {
-    try {
-      Todo todoAtualizado = todoService.atualizar(id, novaTodo);
-      return ResponseEntity.ok(todoAtualizado);
-    } catch (RuntimeException e) {
-      return ResponseEntity.notFound().build();
-    }
+  public ResponseEntity<Todo> atualizarTodo(@PathVariable Long id, @Valid @RequestBody Todo novaTodo) {
+    Todo todoAtualizado = todoService.atualizar(id, novaTodo);
+    return ResponseEntity.ok(todoAtualizado);
   }
 
   // Endpoint para deletar uma tarefa
