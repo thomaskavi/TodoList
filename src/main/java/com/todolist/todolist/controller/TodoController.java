@@ -1,11 +1,13 @@
 package com.todolist.todolist.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.todolist.todolist.dto.TodoDTO;
 import com.todolist.todolist.model.Todo;
 import com.todolist.todolist.service.TodoService;
 
@@ -18,32 +20,63 @@ public class TodoController {
   @Autowired
   private TodoService todoService;
 
+  // Método auxiliar para converter de Todo para TodoDTO
+  private TodoDTO convertToDTO(Todo todo) {
+    TodoDTO dto = new TodoDTO();
+    dto.setTitulo(todo.getTitulo());
+    dto.setDescricao(todo.getDescricao());
+    dto.setConcluida(todo.isConcluida());
+    dto.setCreatedDate(todo.getCreatedDate());
+    dto.setCompletedDate(todo.getCompletedDate());
+    dto.setPriority(todo.getPriority());
+    return dto;
+  }
+
+  // Método auxiliar para converter de TodoDTO para Todo
+  private Todo convertToEntity(TodoDTO dto) {
+    Todo todo = new Todo();
+    todo.setTitulo(dto.getTitulo());
+    todo.setDescricao(dto.getDescricao());
+    todo.setConcluida(dto.isConcluida());
+    todo.setCreatedDate(dto.getCreatedDate());
+    todo.setCompletedDate(dto.getCompletedDate());
+    todo.setPriority(dto.getPriority());
+    return todo;
+  }
+
   // Endpoint para listar todas as tarefas
   @GetMapping
-  public List<Todo> listarTodas() {
-    return todoService.listarTodas();
+  public List<TodoDTO> listarTodas() {
+    return todoService.listarTodas()
+        .stream()
+        .map(this::convertToDTO)
+        .collect(Collectors.toList());
   }
 
   // Endpoint para buscar uma tarefa por ID
   @GetMapping("/{id}")
-  public ResponseEntity<Todo> buscarPorId(@PathVariable Long id) {
+  public ResponseEntity<TodoDTO> buscarPorId(@PathVariable Long id) {
     return todoService.buscarPorId(id)
+        .map(this::convertToDTO)
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
   }
 
   // Endpoint para criar uma nova tarefa
   @PostMapping
-  public ResponseEntity<Todo> criarTodo(@Valid @RequestBody Todo todo) {
-    Todo novaTodo = todoService.salvarTodo(todo);
-    return ResponseEntity.ok(novaTodo);
+  public ResponseEntity<TodoDTO> criarTodo(@Valid @RequestBody TodoDTO todoDTO) {
+    Todo novaTodo = convertToEntity(todoDTO);
+    novaTodo.setCreatedDate(java.time.LocalDateTime.now()); // Definir a data de criação
+    Todo todoSalvo = todoService.salvarTodo(novaTodo);
+    return ResponseEntity.ok(convertToDTO(todoSalvo));
   }
 
   // Endpoint para atualizar uma tarefa existente
   @PutMapping("/{id}")
-  public ResponseEntity<Todo> atualizarTodo(@PathVariable Long id, @Valid @RequestBody Todo novaTodo) {
+  public ResponseEntity<TodoDTO> atualizarTodo(@PathVariable Long id, @Valid @RequestBody TodoDTO novaTodoDTO) {
+    Todo novaTodo = convertToEntity(novaTodoDTO);
     Todo todoAtualizado = todoService.atualizar(id, novaTodo);
-    return ResponseEntity.ok(todoAtualizado);
+    return ResponseEntity.ok(convertToDTO(todoAtualizado));
   }
 
   // Endpoint para deletar uma tarefa
