@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 public class TodoDTO {
 
+  private Long id;
+
   private String titulo;
   private String descricao;
   private boolean concluida;

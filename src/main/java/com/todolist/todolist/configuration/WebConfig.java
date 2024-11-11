@@ -14,7 +14,10 @@ public class WebConfig {
     return new WebMvcConfigurer() {
       @Override
       public void addCorsMappings(@NonNull CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("http://127.0.0.1:5500"); // Substitua pela URL do seu front-end
+        registry.addMapping("/**")
+            .allowedOrigins("http://127.0.0.1:5500")
+            .allowedOrigins("http://localhost:3000")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH");
       }
     };
   }

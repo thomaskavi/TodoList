@@ -17,6 +17,8 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -35,8 +37,10 @@ public class Todo {
   private boolean concluida;
 
   @Column(updatable = false)
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime createdDate;
 
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime completedDate;
 
   @Enumerated(EnumType.STRING)
@@ -48,11 +52,25 @@ public class Todo {
     BAIXA
   }
 
+  // Garantir que a data de criação seja definida no momento da persistência.
   @PrePersist
-  @PreUpdate
-  public void prePersistOrUpdate() {
+  public void prePersist() {
+    if (createdDate == null) {
+      createdDate = LocalDateTime.now(); // Define a data de criação
+    }
+
     if (concluida && completedDate == null) {
       completedDate = LocalDateTime.now(); // Define a data de conclusão
+    }
+  }
+
+  // Atualiza a data de conclusão no momento da atualização
+  @PreUpdate
+  public void preUpdate() {
+    if (concluida && completedDate == null) {
+      completedDate = LocalDateTime.now(); // Define a data de conclusão
+    } else if (!concluida) {
+      completedDate = null; // Limpa a data de conclusão se a tarefa não for concluída
     }
   }
 }

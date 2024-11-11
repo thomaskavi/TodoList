@@ -23,6 +23,7 @@ public class TodoController {
   // Método auxiliar para converter de Todo para TodoDTO
   private TodoDTO convertToDTO(Todo todo) {
     TodoDTO dto = new TodoDTO();
+    dto.setId(todo.getId()); // Agora inclui o id
     dto.setTitulo(todo.getTitulo());
     dto.setDescricao(todo.getDescricao());
     dto.setConcluida(todo.isConcluida());
@@ -88,5 +89,11 @@ public class TodoController {
     } else {
       return ResponseEntity.notFound().build();
     }
+  }
+
+  @PatchMapping("/{id}")
+  public ResponseEntity<TodoDTO> updateStatusAndPriority(@PathVariable Long id, @RequestBody TodoDTO todoDTO) {
+    Todo updatedTodo = todoService.updateStatusAndPriority(id, todoDTO);
+    return ResponseEntity.ok(convertToDTO(updatedTodo)); // Retorna a tarefa atualizada como DTO
   }
 }
