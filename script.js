@@ -33,7 +33,13 @@ async function fetchTodos() {
         row.innerHTML = `
           <td>${todo.titulo}</td>
           <td>${todo.descricao}</td>
-          <td>${todo.priority}</td>
+          <td>
+            <select onchange="updatePriority(${todo.id}, this.value)" value="${todo.priority}">
+              <option value="ALTA" ${todo.priority === 'ALTA' ? 'selected' : ''}>Alta</option>
+              <option value="MEDIA" ${todo.priority === 'MEDIA' ? 'selected' : ''}>Média</option>
+              <option value="BAIXA" ${todo.priority === 'BAIXA' ? 'selected' : ''}>Baixa</option>
+            </select>
+          </td>
           <td>${todo.concluida ? 'Concluída' : 'Pendente'}</td>
           <td>${createdAt}</td>
           <td>${concludedAt}</td>
@@ -56,6 +62,57 @@ async function fetchTodos() {
   }
 }
 
+// Função para alternar o status de conclusão de uma tarefa
+async function toggleConcluida(id, concluida) {
+  const updatedTodo = {
+    concluida: !concluida, // Alterna o status de 'concluida'
+    concludedAt: !concluida ? new Date().toISOString() : null // Se concluída, adiciona a data de conclusão
+  };
+
+  try {
+    const response = await fetch(`${backendUrl}/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedTodo)
+    });
+
+    if (response.ok) {
+      fetchTodos(); // Atualiza a lista de tarefas
+    } else {
+      console.error('Erro ao atualizar status da tarefa:', response.status);
+    }
+  } catch (error) {
+    console.error('Erro ao conectar com o backend:', error);
+  }
+}
+
+// Função para atualizar a prioridade de uma tarefa
+async function updatePriority(id, novaPrioridade) {
+  const updatedTodo = {
+    priority: novaPrioridade
+  };
+
+  try {
+    const response = await fetch(`${backendUrl}/${id}`, {  // Usa o endpoint PATCH
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedTodo)
+    });
+
+    if (response.ok) {
+      fetchTodos(); // Atualiza a lista de tarefas
+    } else {
+      console.error('Erro ao atualizar a prioridade da tarefa:', response.status);
+    }
+  } catch (error) {
+    console.error('Erro ao conectar com o backend:', error);
+  }
+}
+
 // Função para adicionar uma nova tarefa
 async function addTodo(titulo, descricao, priority) {
   const newTodo = {
@@ -63,8 +120,8 @@ async function addTodo(titulo, descricao, priority) {
     descricao,
     concluida: false,
     priority,
-    createdAt: new Date().toISOString(), // Adiciona a data de criação
-    concludedAt: null // Inicialmente não tem data de conclusão
+    createdAt: new Date().toISOString(),
+    concludedAt: null
   };
 
   try {
@@ -107,13 +164,11 @@ async function editTodo(id) {
     if (response.ok) {
       const todo = await response.json();
 
-      // Preencher o formulário de edição com os dados da tarefa
       document.getElementById('editId').value = todo.id;
       document.getElementById('editTitulo').value = todo.titulo;
       document.getElementById('editDescricao').value = todo.descricao;
       document.getElementById('editPriority').value = todo.priority;
 
-      // Exibir o formulário de edição
       document.getElementById('todoForm').style.display = 'none';
       document.getElementById('editForm').style.display = 'block';
     } else {
@@ -126,7 +181,7 @@ async function editTodo(id) {
 
 // Função para salvar a edição
 document.getElementById('editForm').addEventListener('submit', async function (e) {
-  e.preventDefault(); // Evitar recarregar a página
+  e.preventDefault();
 
   const id = document.getElementById('editId').value;
   const titulo = document.getElementById('editTitulo').value;
@@ -141,7 +196,7 @@ document.getElementById('editForm').addEventListener('submit', async function (e
 
   try {
     const response = await fetch(`${backendUrl}/${id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -151,10 +206,8 @@ document.getElementById('editForm').addEventListener('submit', async function (e
     if (response.ok) {
       alert('Tarefa atualizada com sucesso!');
       fetchTodos(); // Atualiza a lista de tarefas
-
-      // Oculta o formulário de edição e exibe o de adição novamente
-      document.getElementById('editForm').style.display = 'none';
       document.getElementById('todoForm').style.display = 'block';
+      document.getElementById('editForm').style.display = 'none';
     } else {
       console.error('Erro ao atualizar a tarefa:', response.status);
       alert('Erro ao atualizar a tarefa.');
@@ -163,6 +216,12 @@ document.getElementById('editForm').addEventListener('submit', async function (e
     console.error('Erro ao conectar com o backend:', error);
     alert('Erro ao conectar com o servidor.');
   }
+});
+
+// Função para cancelar a edição
+document.getElementById('cancelEdit').addEventListener('click', function () {
+  document.getElementById('todoForm').style.display = 'block';
+  document.getElementById('editForm').style.display = 'none';
 });
 
 // Função para excluir uma tarefa
@@ -184,61 +243,26 @@ async function deleteTodo(id) {
       alert('Tarefa excluída com sucesso!');
       fetchTodos(); // Atualiza a lista de tarefas
     } else {
-      console.error('Erro ao excluir tarefa:', response.status);
-      alert('Erro ao excluir tarefa.');
-    }
-  } catch (error) {
-    console.error('Erro ao conectar com o backend:', error);
-    alert('Erro ao conectar com o servidor.');
-  }
-}
-
-// Função para marcar ou desmarcar uma tarefa como concluída
-async function toggleConcluida(id, concluida) {
-  const updatedTodo = {
-    concluida: !concluida,
-    concludedAt: !concluida ? new Date().toISOString() : null
-  };
-
-  try {
-    const response = await fetch(`${backendUrl}/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(updatedTodo)
-    });
-
-    if (response.ok) {
-      fetchTodos(); // Atualiza a lista de tarefas
-    } else {
-      console.error('Erro ao atualizar status da tarefa:', response.status);
+      console.error('Erro ao excluir a tarefa:', response.status);
     }
   } catch (error) {
     console.error('Erro ao conectar com o backend:', error);
   }
 }
 
-// Função para cancelar a edição
-document.getElementById('cancelEdit').addEventListener('click', function () {
-  document.getElementById('editForm').style.display = 'none';
-  document.getElementById('todoForm').style.display = 'block';
-});
+// Inicializa a lista de tarefas
+fetchTodos();
 
-// Adiciona o evento de submit para o formulário de adicionar tarefa
+// Adiciona tarefa
 document.getElementById('todoForm').addEventListener('submit', function (e) {
-  e.preventDefault(); // Evita recarregar a página
-
+  e.preventDefault();
   const titulo = document.getElementById('titulo').value;
   const descricao = document.getElementById('descricao').value;
   const priority = document.getElementById('priority').value;
 
   addTodo(titulo, descricao, priority);
 
-  // Limpar os campos após adicionar
   document.getElementById('titulo').value = '';
   document.getElementById('descricao').value = '';
+  document.getElementById('priority').value = 'MEDIA';
 });
-
-// Inicializa a lista de tarefas quando a página carrega
-fetchTodos();
