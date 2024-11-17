@@ -13,9 +13,9 @@ public class TodoDTO {
 
   private Long id;
 
-  private String titulo;
-  private String descricao;
-  private boolean concluida;
+  private String title;
+  private String description;
+  private boolean completed;
 
   private LocalDateTime createdDate;
   private LocalDateTime completedDate;

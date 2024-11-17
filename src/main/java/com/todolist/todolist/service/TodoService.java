@@ -17,59 +17,59 @@ public class TodoService {
   @Autowired
   private TodoRepository todoRepository;
 
-  public List<Todo> listarTodas() {
+  public List<Todo> findAll() {
     return todoRepository.findAll();
   }
 
-  public Optional<Todo> buscarPorId(Long id) {
+  public Optional<Todo> findById(Long id) {
     return todoRepository.findById(id);
   }
 
-  public Todo salvarTodo(Todo todo) {
-    if (!StringUtils.hasText(todo.getTitulo())) {
-      throw new IllegalArgumentException("O título não pode ser vazio ou conter apenas espaços.");
+  public Todo saveTodo(Todo todo) {
+    if (!StringUtils.hasText(todo.getTitle())) {
+      throw new IllegalArgumentException("The title cannot be empty or contain only spaces.");
     }
     return todoRepository.save(todo);
   }
 
-  public void deletarTodo(Long id) {
+  public void deleteTodo(Long id) {
     todoRepository.deleteById(id);
   }
 
-  public Todo atualizar(Long id, Todo novaTodo) {
+  public Todo update(Long id, Todo newTodo) {
     return todoRepository.findById(id)
         .map(todo -> {
-          if (!StringUtils.hasText(novaTodo.getTitulo())) {
-            throw new IllegalArgumentException("O título não pode ser vazio ou conter apenas espaços.");
+          if (!StringUtils.hasText(newTodo.getTitle())) {
+            throw new IllegalArgumentException("The title cannot be empty or contain only spaces.");
           }
-          todo.setTitulo(novaTodo.getTitulo());
-          todo.setDescricao(novaTodo.getDescricao());
-          todo.setConcluida(novaTodo.isConcluida());
+          todo.setTitle(newTodo.getTitle());
+          todo.setDescription(newTodo.getDescription());
+          todo.setCompleted(newTodo.isCompleted());
           return todoRepository.save(todo);
-        }).orElseThrow(() -> new RuntimeException("Todo não encontrada"));
+        }).orElseThrow(() -> new RuntimeException("Todo not found"));
   }
 
-  public Todo updateStatus(Long id, Boolean concluida) {
-    // Busca a tarefa no banco de dados
+  public Todo updateStatus(Long id, Boolean completed) {
+    // Find the task in the database
     Todo todo = todoRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
+        .orElseThrow(() -> new RuntimeException("Task not found"));
 
-    // Atualiza o status
-    todo.setConcluida(concluida);
+    // Update the status
+    todo.setCompleted(completed);
 
-    // Salva as mudanças no banco
+    // Save changes to the database
     return todoRepository.save(todo);
   }
 
   public Todo updatePriority(Long id, Todo.PriorityEnum newPriority) {
-    // Localizar a tarefa pelo ID
+    // Find the task by ID
     Todo todo = todoRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada com o ID: " + id));
+        .orElseThrow(() -> new ResourceNotFoundException("Task not found with ID: " + id));
 
-    // Atualizar a prioridade
+    // Update the priority
     todo.setPriority(newPriority);
 
-    // Salvar a tarefa atualizada no banco
+    // Save the updated task to the database
     return todoRepository.save(todo);
   }
 }

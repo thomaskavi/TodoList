@@ -30,11 +30,11 @@ public class Todo {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotBlank(message = "O título é obrigatório e não pode ser vazio")
-  private String titulo;
+  @NotBlank(message = "The title is required and cannot be empty")
+  private String title;
 
-  private String descricao;
-  private boolean concluida;
+  private String description;
+  private boolean completed = false;
 
   @Column(updatable = false)
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -47,30 +47,30 @@ public class Todo {
   private PriorityEnum priority;
 
   public enum PriorityEnum {
-    ALTA,
-    MEDIA,
-    BAIXA
+    HIGH,
+    MEDIUM,
+    LOW
   }
 
-  // Garantir que a data de criação seja definida no momento da persistência.
+  // Ensures the creation date is set during persistence.
   @PrePersist
   public void prePersist() {
     if (createdDate == null) {
-      createdDate = LocalDateTime.now(); // Define a data de criação
+      createdDate = LocalDateTime.now(); // Sets the creation date
     }
 
-    if (concluida && completedDate == null) {
-      completedDate = LocalDateTime.now(); // Define a data de conclusão
+    if (completed && completedDate == null) {
+      completedDate = LocalDateTime.now(); // Sets the completion date
     }
   }
 
-  // Atualiza a data de conclusão no momento da atualização
+  // Updates the completion date during updates
   @PreUpdate
   public void preUpdate() {
-    if (concluida && completedDate == null) {
-      completedDate = LocalDateTime.now(); // Define a data de conclusão
-    } else if (!concluida) {
-      completedDate = null; // Limpa a data de conclusão se a tarefa não for concluída
+    if (completed && completedDate == null) {
+      completedDate = LocalDateTime.now(); // Sets the completion date
+    } else if (!completed) {
+      completedDate = null; // Clears the completion date if the task is not completed
     }
   }
 }
