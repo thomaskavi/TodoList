@@ -1,11 +1,20 @@
 package com.todolist.todolist.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.todolist.todolist.dto.TodoDTO;
 import com.todolist.todolist.model.Todo;
@@ -91,9 +100,37 @@ public class TodoController {
     }
   }
 
-  @PatchMapping("/{id}")
-  public ResponseEntity<TodoDTO> updateStatusAndPriority(@PathVariable Long id, @RequestBody TodoDTO todoDTO) {
-    Todo updatedTodo = todoService.updateStatusAndPriority(id, todoDTO);
-    return ResponseEntity.ok(convertToDTO(updatedTodo)); // Retorna a tarefa atualizada como DTO
+  @PatchMapping("/{id}/status")
+  public ResponseEntity<Todo> updateStatus(@PathVariable Long id, @RequestBody Map<String, Boolean> request) {
+    Boolean concluida = request.get("concluida");
+    if (concluida == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    Todo updatedTodo = todoService.updateStatus(id, concluida);
+    return ResponseEntity.ok(updatedTodo);
+  }
+
+  @PatchMapping("/{id}/priority")
+  public ResponseEntity<Todo> updatePriority(
+      @PathVariable Long id,
+      @RequestBody Map<String, String> request) {
+
+    String newPriority = request.get("priority");
+    if (newPriority == null || newPriority.isEmpty()) {
+      return ResponseEntity.badRequest().body(null);
+    }
+
+    try {
+      // Converter a string recebida para o enum correspondente
+      Todo.PriorityEnum priorityEnum = Todo.PriorityEnum.valueOf(newPriority.toUpperCase());
+
+      // Atualizar a prioridade no serviço
+      Todo updatedTodo = todoService.updatePriority(id, priorityEnum);
+      return ResponseEntity.ok(updatedTodo);
+
+    } catch (IllegalArgumentException e) {
+      // Caso o valor recebido não seja válido no Enum
+      return ResponseEntity.badRequest().body(null);
+    }
   }
 }
