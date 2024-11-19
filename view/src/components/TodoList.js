@@ -1,49 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import api from '../api';
+import React from 'react';
+import { updateTaskPriority, updateTaskStatus } from '../api'; // Funções de API para atualização
 
-const TodoList = () => {
-  const [tasks, setTasks] = useState([]);
-
-  // Buscar tarefas ao carregar o componente
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await api.get('/todolist');
-        setTasks(response.data); // Supondo que a API retorna um array de tarefas
-      } catch (error) {
-        console.error('Erro ao buscar tarefas:', error);
-      }
-    };
-
-    fetchTasks();
-  }, []);
-
-  // Atualizar a prioridade da tarefa
-  const updatePriority = async (id, priority) => {
+const TodoList = ({ tasks, setTasks }) => {
+  const handlePriorityChange = async (id, priority) => {
     try {
-      const response = await api.patch(`/todolist/${id}/priority`, { priority });
-      console.log(`Prioridade atualizada:`, response.data);
-      // Atualize as tarefas no estado
+      // Envia a alteração da prioridade para a API
+      await updateTaskPriority(id, priority);
+
+      // Atualiza o estado local da tarefa com a nova prioridade
       setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === id ? { ...task, priority } : task
-        )
+        prevTasks.map((task) => (task.id === id ? { ...task, priority } : task))
       );
     } catch (error) {
       console.error('Erro ao atualizar a prioridade:', error);
     }
   };
 
-  // Atualizar o status da tarefa
-  const updateStatus = async (id, completed) => {
+  const handleStatusChange = async (id, completed) => {
     try {
-      const response = await api.patch(`/todolist/${id}/status`, { completed });
-      console.log(`Status atualizado:`, response.data);
-      // Atualize as tarefas no estado
+      // Envia a alteração do status para a API
+      await updateTaskStatus(id, completed);
+
+      // Atualiza o estado local da tarefa com o novo status
       setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === id ? { ...task, completed } : task
-        )
+        prevTasks.map((task) => (task.id === id ? { ...task, completed } : task))
       );
     } catch (error) {
       console.error('Erro ao atualizar o status:', error);
@@ -52,17 +32,17 @@ const TodoList = () => {
 
   return (
     <div>
-      <h1>Lista de Tarefas</h1>
+      <h2>Lista de Tarefas</h2>
       <ul>
         {tasks.map((task) => (
           <li key={task.id}>
-            <h2>{task.title}</h2>
+            <h3>{task.title}</h3>
             <p>{task.description}</p>
             <div>
               <strong>Prioridade:</strong>
               <select
                 value={task.priority}
-                onChange={(e) => updatePriority(task.id, e.target.value)}
+                onChange={(e) => handlePriorityChange(task.id, e.target.value)}
               >
                 <option value="HIGH">Alta</option>
                 <option value="MEDIUM">Média</option>
@@ -74,7 +54,7 @@ const TodoList = () => {
               <input
                 type="checkbox"
                 checked={task.completed}
-                onChange={(e) => updateStatus(task.id, e.target.checked)}
+                onChange={(e) => handleStatusChange(task.id, e.target.checked)}
               />
               {task.completed ? 'Concluído' : 'Pendente'}
             </div>
