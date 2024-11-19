@@ -45,4 +45,14 @@ export const deleteTask = async (id) => {
   }
 };
 
+export const updateTask = async (id, task) => {
+  try {
+    const response = await api.put(`/todolist/${id}`, task);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao editar a tarefa:', error);
+    throw error;
+  }
+};
+
 export default api;
