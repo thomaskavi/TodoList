@@ -1,0 +1,44 @@
+/* Layout geral */
+.container {
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  opacity: 0;
+  animation: fadeIn 1s ease-in-out forwards; /* Animação de fadeIn */
+}
+
+/* Removendo interferência global */
+.row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.col {
+  max-width: 800px; /* Largura fixa para melhor controle */
+  width: 100%; /* Usa toda a largura disponível */
+}
+
+/* Animação de FadeIn */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Para garantir que a lista de tarefas não fique tão apertada */
+.todoListWrapper {
+  width: 100%;
+  max-width: 800px; /* Largura máxima para a lista de tarefas */
+  margin-top: 20px;
+}
+
+.alert {
+  margin-bottom: 20px; /* Distância entre o alerta e os outros elementos */
+}

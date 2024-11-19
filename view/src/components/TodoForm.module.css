@@ -1,94 +1,64 @@
-/* TodoForm.module.css */
-
 .TodoForm_container {
-  background-color: white;
+  background-color: #f7f7f7;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transform: translateY(-20px);
-  opacity: 0;
-  animation: slideIn 0.5s ease-out forwards;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
 }
 
 .form {
   display: flex;
   flex-direction: column;
+  gap: 15px;
 }
 
-.title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-.input, .textarea, .select {
+.input,
+.textarea,
+.select {
   width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
   font-size: 14px;
 }
 
-.textarea {
-  height: 100px;
+.input:focus,
+.textarea:focus,
+.select:focus {
+  border-color: #007BFF;
+  outline: none;
 }
 
 .button {
-  background-color: #4caf50;
+  background-color: #007BFF;
   color: white;
-  padding: 10px;
   border: none;
-  border-radius: 5px;
-  font-size: 16px;
+  padding: 10px;
+  border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s;
 }
 
 .button:hover {
-  background-color: #45a049;
+  background-color: #0056b3;
 }
 
 .cancelButton {
-  background-color: #f44336;
+  background-color: #ddd;
+  color: #333;
+}
+
+.cancelButton:hover {
+  background-color: #bbb;
 }
 
 .errorMessage {
-  color: #f44336;
+  color: red;
   font-size: 12px;
-  margin-top: 5px;
-}
-
-/* Botões responsivos */
-@media (max-width: 600px) {
-  .form {
-    padding: 10px;
-  }
-
-  .input, .textarea, .select {
-    font-size: 14px;
-  }
-
-  .button {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .cancelButton {
-    font-size: 14px;
-    padding: 8px;
-  }
-}
-
-/* Animação para slideIn */
-@keyframes slideIn {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }

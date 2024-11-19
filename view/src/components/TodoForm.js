@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import styles from './TodoForm.module.css'; // Importando os estilos
 
-// TodoForm.js
-
 const TodoForm = ({ addTask }) => {
   const [task, setTask] = useState({
     title: '',
@@ -85,6 +83,5 @@ const TodoForm = ({ addTask }) => {
     </div>
   );
 };
-
 
 export default TodoForm;

@@ -50,10 +50,13 @@ const TodoList = ({ tasks, setTasks }) => {
 
   const handleStatusChange = async (id, completed) => {
     try {
-      await updateTaskStatus(id, completed);
+      // Atualiza o status no backend
+      const updatedTask = await updateTaskStatus(id, completed);
+
+      // Atualiza o estado local da tarefa para refletir a mudança
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
-          task.id === id ? { ...task, completed } : task
+          task.id === id ? { ...task, completed: updatedTask.completed, completedDate: updatedTask.completedDate } : task
         )
       );
     } catch (error) {
@@ -76,6 +79,11 @@ const TodoList = ({ tasks, setTasks }) => {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const formatDate = (date) => {
+    const formattedDate = new Date(date);
+    return formattedDate.toLocaleString(); // Formata a data como string legível
   };
 
   return (
@@ -143,6 +151,12 @@ const TodoList = ({ tasks, setTasks }) => {
                         )}
                       </button>
                     </div>
+                  </div>
+
+                  {/* Exibe as datas de criação e conclusão, se disponíveis */}
+                  <div className={styles.datesContainer}>
+                    <p><strong>Criado em:</strong> {formatDate(task.createdDate)}</p>
+                    {task.completedDate && <p><strong>Concluído em:</strong> {formatDate(task.completedDate)}</p>}
                   </div>
                 </div>
 
