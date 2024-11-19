@@ -17,12 +17,9 @@ const TodoForm = ({ onTaskAdded }) => {
     };
 
     try {
-      // Chama a função que veio como prop para adicionar a tarefa
-      await onTaskAdded(newTask);
-
-      // Limpa os campos após a adição
-      setNewTaskTitle('');
-      setNewTaskDescription('');
+      await onTaskAdded(newTask);  // Adiciona a tarefa
+      setNewTaskTitle('');  // Limpa o campo do título
+      setNewTaskDescription('');  // Limpa o campo da descrição
     } catch (error) {
       console.error('Erro ao adicionar a tarefa:', error);
     }

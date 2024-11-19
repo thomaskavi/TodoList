@@ -23,8 +23,8 @@ const App = () => {
   // Função para adicionar nova tarefa
   const handleTaskAdded = async (newTask) => {
     try {
-      await api.post('/todolist', newTask); // Adiciona a tarefa pela API
-      setTasks((prevTasks) => [...prevTasks, newTask]); // Atualiza localmente
+      const createdTask = await api.post('/todolist', newTask); // Aguarda a criação da tarefa
+      setTasks((prevTasks) => [...prevTasks, createdTask.data]); // Atualiza localmente com a tarefa criada
     } catch (error) {
       console.error('Erro ao adicionar a tarefa:', error);
     }
