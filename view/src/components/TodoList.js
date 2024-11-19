@@ -79,13 +79,13 @@ const TodoList = ({ tasks, setTasks }) => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.TodoList_container}>
       <h2 className={styles.title}>Lista de Tarefas</h2>
       <ul className={styles.list}>
         {tasks.map((task) => (
           <li key={task.id} className={styles.listItem}>
             {editingTaskId === task.id ? (
-              <div className={styles.editForm}>
+              <div className={`${styles.editForm} ${styles.show}`}>
                 <input
                   type="text"
                   name="title"
@@ -111,10 +111,11 @@ const TodoList = ({ tasks, setTasks }) => {
               </div>
             ) : (
               <div className={styles.taskInfo}>
-                <div>
+                <div className={styles.taskDetails}>
                   <h5>{task.title}</h5>
                   <p>{task.description}</p>
-                  <div>
+
+                  <div className={styles.priorityContainer}>
                     <strong>Prioridade:</strong>
                     <select
                       value={task.priority}
@@ -126,20 +127,25 @@ const TodoList = ({ tasks, setTasks }) => {
                       <option value="LOW">Baixa</option>
                     </select>
                   </div>
-                  <div>
-                    <strong>Status:</strong>
-                    <input
-                      type="checkbox"
-                      checked={task.completed}
-                      onChange={(e) => handleStatusChange(task.id, e.target.checked)}
-                    />
-                    {task.completed ? (
-                      <FaCheckCircle className={styles.iconSuccess} />
-                    ) : (
-                      <FaCircle className={styles.iconDanger} />
-                    )}
+
+                  <div className={styles.statusContainer}>
+                    <strong>Concluir:</strong>
+                    <div className={styles.checkboxContainer}>
+                      <button
+                        type="button"
+                        className={`${styles.checkboxButton} ${task.completed ? styles.completed : ''}`}
+                        onClick={() => handleStatusChange(task.id, !task.completed)}
+                      >
+                        {task.completed ? (
+                          <FaCheckCircle className={styles.iconSuccess} />
+                        ) : (
+                          <FaCircle className={styles.iconDanger} />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
+
                 <div className={styles.actions}>
                   <button
                     className={styles.editButton}

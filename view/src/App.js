@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import styles from './App.css';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
 import api from './api'; // Supondo que você tem uma configuração da API
@@ -33,7 +34,7 @@ const App = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className={styles.container}>
       <div className="row justify-content-center">
         <div className="col-md-6">
           {/* Exibir erro caso ocorra */}

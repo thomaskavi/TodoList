@@ -1,54 +1,94 @@
-/* Container para o TodoForm */
+/* TodoForm.module.css */
+
 .TodoForm_container {
-  background-color: #fff;
+  background-color: white;
+  border-radius: 10px;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px; /* Largura máxima do formulário */
-  margin-bottom: 20px; /* Distância entre o formulário e a lista */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-20px);
+  opacity: 0;
+  animation: slideIn 0.5s ease-out forwards;
 }
 
-/* Título do TodoForm */
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
 .title {
-  text-align: center;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-/* Estilo dos inputs e select dentro do TodoForm */
-.input, .textarea, .select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
   margin-bottom: 15px;
 }
 
-/* Estilo do botão */
-.button {
+.input, .textarea, .select {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.textarea {
+  height: 100px;
+}
+
+.button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  background-color: #28a745;
-  color: white;
+  margin-top: 10px;
   transition: background-color 0.3s ease;
 }
 
 .button:hover {
-  background-color: #218838;
+  background-color: #45a049;
 }
 
 .cancelButton {
-  background-color: #6c757d;
-  margin-top: 10px;
+  background-color: #f44336;
 }
 
-.cancelButton:hover {
-  background-color: #5a6268;
+.errorMessage {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Botões responsivos */
+@media (max-width: 600px) {
+  .form {
+    padding: 10px;
+  }
+
+  .input, .textarea, .select {
+    font-size: 14px;
+  }
+
+  .button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .cancelButton {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+/* Animação para slideIn */
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

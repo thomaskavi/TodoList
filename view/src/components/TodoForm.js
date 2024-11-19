@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styles from './TodoForm.module.css'; // Importando os estilos
 
+// TodoForm.js
+
 const TodoForm = ({ addTask }) => {
   const [task, setTask] = useState({
     title: '',
@@ -35,7 +37,7 @@ const TodoForm = ({ addTask }) => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.TodoForm_container}>
       <form onSubmit={handleSubmit} className={styles.form}>
         <h2 className={styles.title}>Adicionar Tarefa</h2>
 
@@ -83,5 +85,6 @@ const TodoForm = ({ addTask }) => {
     </div>
   );
 };
+
 
 export default TodoForm;

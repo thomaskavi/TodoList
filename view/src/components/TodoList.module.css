@@ -1,75 +1,176 @@
-/* Container para o TodoList */
-.TodoList_container {
-  width: 100%;
-  max-width: 600px; /* Largura máxima da lista */
-  padding-top: 20px; /* Espaço entre o formulário e a lista */
+/* Formulário de edição */
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  transform: translateX(-20px);
+  opacity: 0;
+  animation: slideInFromLeft 0.5s ease-out forwards;
 }
 
-/* Lista de tarefas */
-.list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  background-color: #f8f9fa;
+/* Entrada e textarea no formulário de edição */
+.editForm input,
+.editForm textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ajuste no textarea para lidar com transbordamento */
+.editForm textarea {
+  height: 100px;
+  word-wrap: break-word;  /* Quebra as palavras longas */
+  overflow-wrap: break-word; /* Quebra palavras quando necessário */
+  resize: vertical; /* Permite redimensionar apenas na vertical */
+  overflow: auto; /* Exibe barra de rolagem quando necessário */
+}
+
+/* Estilo para as tarefas quando não estiver em edição */
+.taskInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  background-color: #fff;
+  padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 10px;
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards;
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  flex-wrap: wrap; /* Permite que o conteúdo se ajuste corretamente */
+  overflow: hidden; /* Impede que o texto ultrapasse a largura */
+}
+
+/* Detalhes da tarefa (titulo e descrição) */
+.taskDetails h5 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.taskDetails p {
+  font-size: 14px;
+  color: #666;
+  white-space: normal; /* Permite quebra de linha */
+  word-wrap: break-word; /* Quebra as palavras longas */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Exibe "..." quando o texto é muito longo */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limita a exibição a 3 linhas */
+  -webkit-box-orient: vertical;
+  max-width: 100%; /* Impede que o texto ultrapasse a largura da coluna */
   overflow: hidden;
 }
 
-/* Itens da lista */
-.listItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  border-bottom: 1px solid #e0e0e0;
-  background-color: #fff;
-  transition: background-color 0.3s ease;
-}
-
-/* Efeito de hover nos itens da lista */
-.listItem:hover {
-  background-color: #f1f1f1;
-}
-
-/* Estilo do botão dentro da lista */
-.actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-/* Botões na lista de tarefas */
-.saveButton, .cancelButton, .editButton, .deleteButton {
-  margin-right: 5px;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 4px;
+/* Container de prioridade */
+.priorityContainer select {
+  padding: 5px 10px;
   font-size: 14px;
+  border-radius: 4px;
+}
+
+/* Container de status */
+.statusContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Botões de conclusão */
+.checkboxButton {
+  border: none;
+  background-color: transparent;
   cursor: pointer;
 }
 
-.saveButton {
-  background-color: #28a745;
-  color: white;
+.checkboxButton.completed {
+  color: #4caf50;
 }
 
-.cancelButton {
-  background-color: #6c757d;
-  color: white;
+.checkboxButton:not(.completed) {
+  color: #f44336;
+}
+
+/* Estilos para os botões de editar e excluir */
+.actions button {
+  padding: 8px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.actions button:hover {
+  color: #2196f3;
 }
 
 .editButton {
-  background-color: #ffc107;
-  color: white;
+  color: #4caf50; /* Verde para editar */
 }
 
 .deleteButton {
-  background-color: #dc3545;
-  color: white;
+  color: #f44336; /* Vermelho para deletar */
 }
 
-/* Efeito de hover nos botões */
-.saveButton:hover, .cancelButton:hover, .editButton:hover, .deleteButton:hover {
-  opacity: 0.8;
+/* Listagem de tarefas */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Estilo geral para a lista de tarefas */
+.TodoList_container {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Animação de FadeIn */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Animação de SlideIn da esquerda */
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animação de FadeIn para as tarefas */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
