@@ -34,7 +34,7 @@ public class Todo {
   private String title;
 
   private String description;
-  private boolean completed = false;
+  private Boolean completed;
 
   @Column(updatable = false)
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

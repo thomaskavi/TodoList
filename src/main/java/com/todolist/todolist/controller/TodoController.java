@@ -35,7 +35,7 @@ public class TodoController {
     dto.setId(todo.getId()); // Now includes the id
     dto.setTitle(todo.getTitle());
     dto.setDescription(todo.getDescription());
-    dto.setCompleted(todo.isCompleted());
+    dto.setCompleted(todo.getCompleted());
     dto.setCreatedDate(todo.getCreatedDate());
     dto.setCompletedDate(todo.getCompletedDate());
     dto.setPriority(todo.getPriority());

@@ -44,7 +44,7 @@ public class TodoService {
           }
           todo.setTitle(newTodo.getTitle());
           todo.setDescription(newTodo.getDescription());
-          todo.setCompleted(newTodo.isCompleted());
+          todo.setCompleted(newTodo.getCompleted());
           return todoRepository.save(todo);
         }).orElseThrow(() -> new RuntimeException("Todo not found"));
   }
