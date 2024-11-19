@@ -1,46 +1,86 @@
 import React, { useState } from 'react';
+import styles from './TodoForm.module.css'; // Importando os estilos
 
-const TodoForm = ({ onTaskAdded }) => {
-  const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [newTaskDescription, setNewTaskDescription] = useState('');
+const TodoForm = ({ addTask }) => {
+  const [task, setTask] = useState({
+    title: '',
+    description: '',
+    priority: 'LOW',
+  });
+  const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setTask((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (newTaskTitle.trim() === '') return; // Verifica se o título não está vazio
-
-    const newTask = {
-      title: newTaskTitle,
-      description: newTaskDescription,
-      priority: 'LOW', // Valor inicial de prioridade
-      completed: false, // Tarefa não concluída inicialmente
-    };
-
-    try {
-      await onTaskAdded(newTask);  // Adiciona a tarefa
-      setNewTaskTitle('');  // Limpa o campo do título
-      setNewTaskDescription('');  // Limpa o campo da descrição
-    } catch (error) {
-      console.error('Erro ao adicionar a tarefa:', error);
+    if (!task.title || !task.description) {
+      setError('Por favor, preencha todos os campos');
+      return;
     }
+
+    addTask(task); // Chama a função passada como prop
+    setTask({
+      title: '',
+      description: '',
+      priority: 'LOW',
+    });
+    setError('');
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={newTaskTitle}
-        onChange={(e) => setNewTaskTitle(e.target.value)}
-        placeholder="Título da tarefa"
-        required
-      />
-      <textarea
-        value={newTaskDescription}
-        onChange={(e) => setNewTaskDescription(e.target.value)}
-        placeholder="Descrição da tarefa"
-      />
-      <button type="submit">Adicionar Tarefa</button>
-    </form>
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h2 className={styles.title}>Adicionar Tarefa</h2>
+
+        <input
+          type="text"
+          name="title"
+          className={styles.input}
+          value={task.title}
+          onChange={handleChange}
+          placeholder="Título da tarefa"
+        />
+
+        <textarea
+          name="description"
+          className={styles.textarea}
+          value={task.description}
+          onChange={handleChange}
+          placeholder="Descrição da tarefa"
+        />
+
+        <select
+          name="priority"
+          className={styles.select}
+          value={task.priority}
+          onChange={handleChange}
+        >
+          <option value="HIGH">Alta</option>
+          <option value="MEDIUM">Média</option>
+          <option value="LOW">Baixa</option>
+        </select>
+
+        {error && <p className={styles.errorMessage}>{error}</p>}
+
+        <button type="submit" className={styles.button}>
+          Adicionar Tarefa
+        </button>
+        <button
+          type="button"
+          className={`${styles.button} ${styles.cancelButton}`}
+          onClick={() => setTask({ title: '', description: '', priority: 'LOW' })}
+        >
+          Cancelar
+        </button>
+      </form>
+    </div>
   );
 };
 
