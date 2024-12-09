@@ -2,8 +2,7 @@
 Uma aplicação de gerenciamento de tarefas desenvolvida com Java 17, Spring Boot, ReactJS e H2 Database.
 
 ## 🎥 Demonstração
-
-![Demonstração da Aplicação](https://i.imgur.com/ackAVRE.gif)
+![Fullstack demo](assets/demo-project-todolist.gif)
 
 ### Descrição
 O projeto TodoList FullStack permite criar, editar, atualizar status, alterar prioridades e excluir tarefas de maneira intuitiva. Foi desenvolvido para praticar integração entre backend e frontend, além de implementar boas práticas no desenvolvimento de APIs RESTful e interfaces interativas.
